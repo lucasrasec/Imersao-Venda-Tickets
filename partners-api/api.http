@@ -1,0 +1,64 @@
+GET http://localhost:3000/events
+
+###
+# @name created
+POST http://localhost:3000/events
+Content-Type: application/json
+
+{
+  "name": "Evento 3",
+  "date": "2024-06-17T00:00:00",
+  "description": "Bora testar pra ver se essa bomba presta",
+  "price": 70
+}
+
+###
+
+@eventId = {{ created.response.body.id }}
+
+###
+GET http://localhost:3000/events/{{ eventId }}
+
+###
+PATCH  http://localhost:3000/events/{{ eventId }}
+Content-Type: application/json
+
+{
+  "name": "Evento 5",
+  "date": "2024-06-17T00:00:00",
+  "description": "Bora testar pra ver se essa bomba presta",
+  "price": 70
+}
+
+###
+DELETE http://localhost:3000/events/{{ eventId }}
+
+###
+GET http://localhost:3000/events/{{eventId}}/spots
+
+###
+# @name spotCreated
+POST http://localhost:3000/events/{{eventId}}/spots
+Content-Type: application/json
+
+{
+  "name": "Aqui em casa"
+}
+
+###
+
+@spotName = {{ spotCreated.response.body.name }}
+
+###
+GET http://localhost:3000/events/{{eventId}}/reserve
+
+###
+POST http://localhost:3000/events/{{eventId}}/reserve
+Content-Type: application/json
+X-API-Token: 123
+
+{
+ "spots": ["{{ spotName }}"],
+ "ticket_kind": "full",
+ "email": "Teste@test.com"
+}
